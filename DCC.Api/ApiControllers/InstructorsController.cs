@@ -7,7 +7,7 @@ using DCC.Domain.Models;
 using DCC.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DCC.Api.Controllers
+namespace DCC.Api.ApiControllers
 {
     [Route("api/instructors")]
     public class InstructorsController : Controller
