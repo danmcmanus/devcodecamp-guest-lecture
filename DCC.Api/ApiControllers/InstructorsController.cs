@@ -18,7 +18,7 @@ namespace DCC.Api.ApiControllers
         {
             _instructorsService = instructorsService;
         }
-        // GET: api/instructors
+
         [HttpGet]
         [Route("")]
         public async Task<IActionResult> GetInstructors()
@@ -26,15 +26,7 @@ namespace DCC.Api.ApiControllers
             var response = await _instructorsService.GetAllInstructorsAsync();
             return Ok(response);
         }
-
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<controller>
+        
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> AddInstructor([FromBody]InstructorRequest request)
@@ -48,10 +40,11 @@ namespace DCC.Api.ApiControllers
             return Ok(response);
         }
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateInstructorData([FromBody]UpdateInstructorRequest request)
         {
+            var response = await _instructorsService.UpdateInstructorAsync(request);
+            return Ok(response);
         }
 
         [HttpPut]
@@ -62,10 +55,11 @@ namespace DCC.Api.ApiControllers
             return Ok(response);
         }
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{instructorId}")]
+        public async Task<IActionResult> Delete(int instructorId)
         {
+            var response = await _instructorsService.DeleteInstructorAsync(instructorId);
+            return Ok(response);
         }
     }
 }

@@ -8,9 +8,11 @@ namespace DCC.Domain.Models
 {
     public class InstructorRequest
     {
-        public string Name { get; set; }
-        public string InstructorBio { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string JobTitle { get; set; }
         public string Image { get; set; }
-        public string Position { get; internal set; }
+        public string StrongestLanguage { get; set; }
+
     }
 }

@@ -31,24 +31,23 @@ namespace DCC.Domain.Services
 
         public async Task<IEnumerable<Instructor>> SearchInstructorsByNameAsync(string name)
         {
-            var instructors = await _context.Instructors.Where(i => i.Name.Contains(name)).ToListAsync();
+            var instructors = await _context.Instructors.Where(i => $"{i.FirstName} {i.LastName}".Contains(name)).ToListAsync();
             return instructors;
         }
 
         public async Task<InstructorResponse> AddInstructorAsync(InstructorRequest request)
         {
-            var response = new InstructorResponse();
+            var response = new InstructorResponse { IsError = false };
             try
             {
                 await _context.Instructors.AddAsync(new Instructor
                 {
-                    Name = request.Name,
-                    InstructorBio = request.InstructorBio,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
                     Image = request.Image,
-                    Position = request.Position
+                    JobTitle = request.JobTitle
                 });
 
-                response.IsError = false;
                 await _context.SaveChangesAsync();
             }
             catch (Exception e)
@@ -60,37 +59,52 @@ namespace DCC.Domain.Services
             return response;
         }
 
-        public async Task<Instructor> UpdateInstructorAsync(UpdateInstructorRequest request)
+        public async Task<UpdateInstructorResponse> UpdateInstructorAsync(UpdateInstructorRequest request)
         {
-            var instructorToUpdate =
-                await _context.Instructors.Where(i => i.Id == request.InstructorId).SingleOrDefaultAsync();
+            var response = new UpdateInstructorResponse { IsError = false };
 
-            if (instructorToUpdate != null)
+            try
             {
-                instructorToUpdate.Image = request.Image;
-                instructorToUpdate.Name = request.Name;
-                instructorToUpdate.InstructorBio = request.InstructorBio;
-                instructorToUpdate.Position = request.InstructorBio;
+                var instructorToUpdate = await _context.Instructors.Where(i => i.Id == request.InstructorId).SingleOrDefaultAsync();
 
-                _context.Instructors.Update(instructorToUpdate);
-                await _context.SaveChangesAsync();
+                if (instructorToUpdate != null)
+                {
+                    instructorToUpdate.FirstName = request.FirstName != instructorToUpdate.FirstName ? request.FirstName : instructorToUpdate.FirstName;
+                    instructorToUpdate.LastName = request.LastName != instructorToUpdate.LastName ? request.LastName : instructorToUpdate.LastName;
+                    instructorToUpdate.JobTitle = request.JobTitle != instructorToUpdate.JobTitle ? request.JobTitle : instructorToUpdate.JobTitle;
+                    instructorToUpdate.Image = request.Image != instructorToUpdate.Image ? request.Image : instructorToUpdate.Image;
+
+                    _context.Instructors.Update(instructorToUpdate);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+
+                    response.FirstName = instructorToUpdate.FirstName;
+                    response.LastName = instructorToUpdate.LastName;
+                    response.JobTitle = instructorToUpdate.JobTitle;
+                    response.NumberOfRatings = instructorToUpdate.NumberOfRatings;
+                    response.Image = instructorToUpdate.Image;
+                    response.AggregateRatings = instructorToUpdate.AggregateRatings;
+                    response.AverageRating = instructorToUpdate.AverageRating;
+                }
             }
-
-            return instructorToUpdate;
+            catch (Exception ex)
+            {
+                response.IsError = true;
+                response.ErrorMessage = ex.Message;
+            }
+            return response;
         }
 
         public async Task<BaseApiResponse> RateInstructorAsync(RateInstructorRequest request)
         {
-            var response = new BaseApiResponse();
+            var response = new BaseApiResponse { IsError = false };
             try
             {
                 var instructorToRate = await _context.Instructors.SingleOrDefaultAsync(i => i.Id == request.InstructorId);
                 instructorToRate.NumberOfRatings++;
                 instructorToRate.AggregateRatings += request.Rating;
-                instructorToRate.AverageRating = CalculateInstructorRatingAsync(instructorToRate.AggregateRatings,
-                    instructorToRate.NumberOfRatings);
+                instructorToRate.AverageRating = CalculateInstructorRatingAsync(instructorToRate.AggregateRatings, instructorToRate.NumberOfRatings);
+
                 await _context.SaveChangesAsync();
-                response.IsError = false;
             }
             catch (Exception e)
             {
@@ -105,6 +119,28 @@ namespace DCC.Domain.Services
         private double CalculateInstructorRatingAsync(int aggregateRatings, int totalRatingsCount)
         {
             return (double)aggregateRatings / totalRatingsCount;
+        }
+
+        public async Task<BaseApiResponse> DeleteInstructorAsync(int instructorId)
+        {
+            var response = new BaseApiResponse { IsError = false };
+
+            try
+            {
+                var instructorToDelete = await _context.Instructors.SingleOrDefaultAsync(i => i.Id == instructorId);
+                if (instructorToDelete != null)
+                {
+                    instructorToDelete.IsDeleted = true;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsError = true;
+                response.ErrorMessage = ex.Message;
+            }
+
+            return response;
         }
     }
 }

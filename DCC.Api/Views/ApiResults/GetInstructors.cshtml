@@ -1,14 +1,4 @@
-﻿<script>
-    const instructorsApiUrl = `${window.location.origin}/api/instructors`;
-
-    $.get(instructorsApiUrl)
-        .then((response) => {
-            const prettifiedJson = JSON.stringify(response, null, '\t');
-            $('#instructordata').text(prettifiedJson);
-    });
-
-</script>
-
+﻿
 <div class="alert-dark">
     <pre id="instructordata"></pre>
 </div>

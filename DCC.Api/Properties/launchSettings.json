@@ -11,7 +11,6 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "apiresults/getinstructors",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

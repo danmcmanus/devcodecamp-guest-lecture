@@ -14,7 +14,8 @@ namespace DCC.Domain.Services
         Task<Instructor> GetInstructorByIdAsync(int instructorId);
         Task<IEnumerable<Instructor>> SearchInstructorsByNameAsync(string name);
         Task<InstructorResponse> AddInstructorAsync(InstructorRequest request);
-        Task<Instructor> UpdateInstructorAsync(UpdateInstructorRequest request);
+        Task<UpdateInstructorResponse> UpdateInstructorAsync(UpdateInstructorRequest request);
         Task<BaseApiResponse> RateInstructorAsync(RateInstructorRequest request);
+        Task<BaseApiResponse> DeleteInstructorAsync(int instructorId);
     }
 }
