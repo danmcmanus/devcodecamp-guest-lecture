@@ -61,6 +61,7 @@ body {
 
 .instructor-bio-card {
     width: 18rem;
+    max-height: 31rem;
 }
 
 .instructor-bio-image {

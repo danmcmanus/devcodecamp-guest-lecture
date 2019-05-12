@@ -12,7 +12,7 @@ namespace DCC.Api.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Instructors");
         }
 
         public IActionResult Privacy()
