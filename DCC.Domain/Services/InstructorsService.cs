@@ -116,9 +116,9 @@ namespace DCC.Domain.Services
         }
 
 
-        private double CalculateInstructorRatingAsync(int aggregateRatings, int totalRatingsCount)
+        private decimal CalculateInstructorRatingAsync(int aggregateRatings, int totalRatingsCount)
         {
-            return (double)aggregateRatings / totalRatingsCount;
+            return aggregateRatings / totalRatingsCount;
         }
 
         public async Task<BaseApiResponse> DeleteInstructorAsync(int instructorId)

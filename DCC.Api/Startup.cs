@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DCC.Data;
 using DCC.Domain.Services;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +35,7 @@ namespace DCC.Api
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IInstructorsService, InstructorsService>();
             services.AddDbContext<DCCDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

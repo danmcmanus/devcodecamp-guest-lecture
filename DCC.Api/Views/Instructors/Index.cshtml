@@ -1,0 +1,35 @@
+﻿@model IEnumerable<DCC.Domain.DTO.InstructorDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Instructors</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div class="row">
+    @foreach (var item in Model)
+    {
+
+    <div class="col-sm-4 instructor-bio-card-column">
+        <div class="card-deck">
+
+            <div class="card instructor-bio-card">
+                <div class="card-header">
+                    <h5 class="card-title text-center">@item.FullName</h5>
+                </div>
+                <div class="card-body">
+                    <img class="card-img-top instructor-bio-image" src="@item.Image" alt="Card image cap">
+                </div>
+                <div class="card-footer">
+                    <p class="card-text">Number of Ratings: @item.NumberOfRatings</p>
+                    <p class="card-text">Overall Rating: @item.AverageRating</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+

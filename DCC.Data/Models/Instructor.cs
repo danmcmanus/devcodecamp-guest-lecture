@@ -9,7 +9,7 @@ namespace DCC.Data.Models
         public string LastName { get; set; }
         public string JobTitle { get; set; }
         public string Image { get; set; }
-        public double? AverageRating { get; set; }
+        public decimal AverageRating { get; set; }
         public int AggregateRatings { get; set; }
         public int NumberOfRatings { get; set; }
         public bool IsDeleted { get; set; }
