@@ -26,6 +26,14 @@ namespace DCC.Api.ApiControllers
             var response = await _instructorsService.GetAllInstructorsAsync();
             return Ok(response);
         }
+
+        [HttpGet("{instructorId}")]
+        public async Task<IActionResult> GetInstructorById(int instructorId)
+        {
+            var response = await _instructorsService.GetInstructorByIdAsync(instructorId);
+            return Ok(response);
+        }
+        
         
         [HttpPost]
         [Route("")]

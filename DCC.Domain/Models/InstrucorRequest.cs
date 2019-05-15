@@ -12,7 +12,6 @@ namespace DCC.Domain.Models
         public string LastName { get; set; }
         public string JobTitle { get; set; }
         public string Image { get; set; }
-        public string StrongestLanguage { get; set; }
 
     }
 }

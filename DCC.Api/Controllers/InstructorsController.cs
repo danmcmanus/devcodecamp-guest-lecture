@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using DCC.Domain.Services;
 using DCC.Domain.DTO;
 using AutoMapper;
+using DCC.Data.Models;
+using DCC.Domain.Models;
 
 namespace DCC.Api.Controllers
 {
@@ -27,24 +29,6 @@ namespace DCC.Api.Controllers
             return View(model);
         }
 
-        // GET: Instructors/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var instructor = await _context.Instructors
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (instructor == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(instructor);
-        //}
-
         // GET: Instructors/Create
         public IActionResult Create()
         {
@@ -54,18 +38,24 @@ namespace DCC.Api.Controllers
         // POST: Instructors/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,JobTitle,Image,AverageRating,AggregateRatings,NumberOfRatings,IsDeleted")] Instructor instructor)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(instructor);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(instructor);
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,JobTitle,Image,IsDeleted")] Instructor instructor)
+        {
+            if (ModelState.IsValid)
+            {
+                await _instructorsService.AddInstructorAsync(new InstructorRequest
+                {
+                    FirstName = instructor.FirstName,
+                    LastName = instructor.LastName,
+                    JobTitle = instructor.JobTitle,
+                    Image = instructor.Image
+                });
+
+                return RedirectToAction(nameof(Index));
+            }
+            return View(instructor);
+        }
 
         //// GET: Instructors/Edit/5
         //public async Task<IActionResult> Edit(int? id)

@@ -26,7 +26,10 @@ namespace DCC.Domain.Services
 
         public async Task<Instructor> GetInstructorByIdAsync(int instructorId)
         {
-            return await _context.FindAsync<Instructor>(instructorId);
+            var instructor = await _context.FindAsync<Instructor>(instructorId);
+            instructor.AverageRating =
+                this.CalculateInstructorRatingAsync(instructor.AggregateRatings, instructor.NumberOfRatings);
+            return instructor;
         }
 
         public async Task<IEnumerable<Instructor>> SearchInstructorsByNameAsync(string name)
@@ -116,7 +119,7 @@ namespace DCC.Domain.Services
         }
 
 
-        private decimal CalculateInstructorRatingAsync(int aggregateRatings, int totalRatingsCount)
+        private decimal CalculateInstructorRatingAsync(decimal aggregateRatings, int totalRatingsCount)
         {
             return aggregateRatings / totalRatingsCount;
         }
