@@ -47,8 +47,7 @@ namespace DCC.Domain.Services
                 {
                     FirstName = request.FirstName,
                     LastName = request.LastName,
-                    Image = request.Image,
-                    JobTitle = request.JobTitle
+                    Image = request.Image
                 });
 
                 await _context.SaveChangesAsync();
@@ -74,7 +73,6 @@ namespace DCC.Domain.Services
                 {
                     instructorToUpdate.FirstName = request.FirstName != instructorToUpdate.FirstName ? request.FirstName : instructorToUpdate.FirstName;
                     instructorToUpdate.LastName = request.LastName != instructorToUpdate.LastName ? request.LastName : instructorToUpdate.LastName;
-                    instructorToUpdate.JobTitle = request.JobTitle != instructorToUpdate.JobTitle ? request.JobTitle : instructorToUpdate.JobTitle;
                     instructorToUpdate.Image = request.Image != instructorToUpdate.Image ? request.Image : instructorToUpdate.Image;
 
                     _context.Instructors.Update(instructorToUpdate);
@@ -82,7 +80,6 @@ namespace DCC.Domain.Services
 
                     response.FirstName = instructorToUpdate.FirstName;
                     response.LastName = instructorToUpdate.LastName;
-                    response.JobTitle = instructorToUpdate.JobTitle;
                     response.NumberOfRatings = instructorToUpdate.NumberOfRatings;
                     response.Image = instructorToUpdate.Image;
                     response.AggregateRatings = instructorToUpdate.AggregateRatings;

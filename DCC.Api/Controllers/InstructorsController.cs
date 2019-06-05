@@ -48,7 +48,6 @@ namespace DCC.Api.Controllers
                 {
                     FirstName = instructor.FirstName,
                     LastName = instructor.LastName,
-                    JobTitle = instructor.JobTitle,
                     Image = instructor.Image
                 });
 
