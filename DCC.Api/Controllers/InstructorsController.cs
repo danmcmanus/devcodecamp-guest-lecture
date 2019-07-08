@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,9 +24,8 @@ namespace DCC.Api.Controllers
         private readonly IMapper _mapper;
         private readonly IInstructorsService _instructorsService;
 
-        private static readonly string storageConnectionString =
-            "DefaultEndpointsProtocol=https;AccountName=cs2bd73b13d5638x471cx8b3;AccountKey=8H79sbL/IiKrEEhxOapbERUpZgZaOb606FdczAv7wqG4dXromZYSriwqfV3CM8kw8CffFZVdnLFwQlS4XRyf1A==;EndpointSuffix=core.windows.net";
-
+        //string storageConnectionString = Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING");
+        Microsoft.Azure.Storage.CloudStorageAccount storageConnection = Microsoft.Azure.Storage.CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=devcodecampapi;AccountKey=CIWpQRPHzHmc454moVQyYcMkHTvxfORaGlFi6Imfvdo62iKMWBW93sk2qt+7va/BVMF2GCP3pVsWGA+RUk/SPQ==;EndpointSuffix=core.windows.net");
         public InstructorsController(IInstructorsService instructorsService, IMapper mapper)
         {
             _mapper = mapper;
@@ -53,7 +53,7 @@ namespace DCC.Api.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Image")] InstructorVM instructor)
         {
-            CloudStorageAccount account = CloudStorageAccount.Parse(storageConnectionString);
+            CloudStorageAccount account = CloudStorageAccount.Parse(storageConnection.ToString());
             CloudBlobClient serviceClient = account.CreateCloudBlobClient();
 
             // Create container. Name must be lower case.
@@ -63,26 +63,28 @@ namespace DCC.Api.Controllers
 
             // write a blob to the container
             CloudBlockBlob blob = container.GetBlockBlobReference("helloworld.txt");
-            
+
             using (var memoryStream = new MemoryStream())
             {
                 await instructor.Image.CopyToAsync(memoryStream);
                 await blob.UploadFromStreamAsync(memoryStream);
-                
-            }
 
-            if (ModelState.IsValid)
-            {
-                await _instructorsService.AddInstructorAsync(new InstructorRequest
+
+
+                if (ModelState.IsValid)
                 {
-                    FirstName = instructor.FirstName,
-                    LastName = instructor.LastName
-                });
+                    await _instructorsService.AddInstructorAsync(new InstructorRequest
+                    {
+                        FirstName = instructor.FirstName,
+                        LastName = instructor.LastName
+                    });
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(instructor);
         }
+
         public static async Task<bool> UploadFileToStorage(Stream fileStream, string fileName, AzureStorageConfig _storageConfig)
         {
             // Create storagecredentials object by reading the values from the configuration (appsettings.json)

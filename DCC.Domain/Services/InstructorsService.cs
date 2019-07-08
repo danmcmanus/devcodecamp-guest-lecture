@@ -142,5 +142,10 @@ namespace DCC.Domain.Services
 
             return response;
         }
+
+        public async Task ProcessAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

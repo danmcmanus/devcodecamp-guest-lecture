@@ -17,5 +17,6 @@ namespace DCC.Domain.Services
         Task<UpdateInstructorResponse> UpdateInstructorAsync(UpdateInstructorRequest request);
         Task<BaseApiResponse> RateInstructorAsync(RateInstructorRequest request);
         Task<BaseApiResponse> DeleteInstructorAsync(int instructorId);
+        Task ProcessAsync();
     }
 }
